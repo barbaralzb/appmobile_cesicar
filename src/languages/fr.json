@@ -1,0 +1,37 @@
+{
+    "POLITIQUEDECONF": "POLITIQUE DE CONFIDENTIALITÉ",
+    "MDPTEXT": "Mot de passe oublié ?",
+    "JAI_LU_ET_JACCEPTE_LES_CGU": "J'ai lu j'accepte les CGU, j'ai pris connaissance des confitions de traitement de mes données et de la politique de confidentialité",
+    "SINCRIRE": "S’inscrire",
+    "CONNECTEZ_VOUS": "Connectez-vous",
+    "SE_CONNECTER": "Se connecter",
+    "MAILTEXT": "Adresse mail",
+    "MOT_DE_PASSE_TEXT": "Mot de passe",
+    "CONNEXION_TEXT": "Connexion",
+    "PASDECOMPTE": "Pas de compte ? ",
+    "IDENTIFIANT": "Identifiant",
+    "SUIVANT": "Suivant",
+    "VOUS_AVEZ_DEJA_UN_COMPTE": "Vous avez déjà un compte ?",
+    "EMAIL_EXEMPLE": "user@viacesi.fr",
+    "VOUS_NE_POSSEDEZ_PAS_DE_COMPTE": "Vous ne possédez pas de compte ?",
+    "INSCRIVEZ_VOUS": "Inscrivez-vous",
+    "RECHERCHE": "Recherche",
+    "PUBLIER": "Publier",
+    "TRAJETS": "Trajets",
+    "NOTIFS": "Notifs",
+    "PROFILE": "Profile",
+    "MY_POSITION": "Je suis ici",
+    "NOUS_Y_TRAVAILLONS": "Nous y travaillons !",
+    "BIENTOT_DISPONIBLE": "Bientôt disponible",
+    "SE_DECONNECTER": "Se déconnecter",
+    "ACTIVER_LOCALISATION_TEXT": "Pour profiter pleinement de notre application et recevoir des recommandations de trajets à proximité, veuillez activer votre localisation.",
+    "ACTIVER_LOCALISATION": "Activer la localisation",
+    "CHOISISSEZ_VOTRE_TRAJET": "Choisissez vote trajet",
+    "CESI": "CESI",
+    "ROUEN": "Rouen",
+    "DEPART": "Départ",
+    "RECHERCHER": "Recherche"
+
+
+
+}
