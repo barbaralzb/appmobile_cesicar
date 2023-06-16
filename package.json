@@ -1,5 +1,5 @@
 {
-  "name": "app_mobile_cesicar_v2",
+  "name": "appmobile_cesicar",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
