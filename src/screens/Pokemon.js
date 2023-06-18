@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { getPokemonDetailsApi } from '../api/pokemon';
-import Type from '../componets/Pokemon/Type';
-import Stats from '../componets/Pokemon/Stats';
-import Header from '../componets/Pokemon/Header';
+import Type from '../componet/Pokemon/Type';
+import Stats from '../componet/Pokemon/Stats';
+import Header from '../componet/Pokemon/Header';
 import Icon from "react-native-vector-icons/FontAwesome5";
-import Favorite from '../componets/Pokemon/Favorite';
+import Favorite from '../componet/Pokemon/Favorite';
 import useAuth from '../hooks/useAuth';
 
 export default function Pokemon(props) {

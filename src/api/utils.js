@@ -3,7 +3,7 @@ let PlatformServer;
 
 const PhysicalDeviceIOS = false;
 const PhysicalDeviceAndroid = true;
-const MyIPV4 = "10.176.128.52";
+const MyIPV4 = "192.168.1.26";
 export const PRODUCTION = false
 
 const HostIOS = PhysicalDeviceIOS ? MyIPV4 : "localhost"

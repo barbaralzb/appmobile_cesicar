@@ -4,8 +4,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getPokemonsFavoriteApi } from "../api/favorite";
 import { getPokemonDetailsApi } from "../api/pokemon";
 import useAuth from "../hooks/useAuth";
-import PokemonList from "../componets/PokemonList";
-import NotLogged from "../componets/NotLogged";
+import PokemonList from "../componet/PokemonList";
+import NotLogged from "../componet/NotLogged";
 
 export default function Favorite() {
     const [pokemons, setPokemons] = useState([]);

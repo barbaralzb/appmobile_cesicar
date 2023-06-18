@@ -15,8 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "lizama.barbara"
+      "supportsTablet": true
     },
     "android": {
       "package": "lizama.barbara",

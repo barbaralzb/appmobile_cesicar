@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import LoginForm from '../componets/Auth/LoginForm';
-import UserData from '../componets/Auth/UserData';
+import LoginForm from '../componet/Auth/LoginForm';
+import UserData from '../componet/Auth/UserData';
 import useAuth from '../hooks/useAuth';
 
 export default function Account() {

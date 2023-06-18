@@ -22,7 +22,7 @@ export default function Navigation() {
             }}
         >
             <Tab.Screen 
-                name="FavoriteNavigation"
+                name="Favorite"
                 component={FavoriteNavigation}
                 options={{
                     headerShown: false,
@@ -32,7 +32,7 @@ export default function Navigation() {
                 }}
             />
             <Tab.Screen
-                name="PokedexNavigation"
+                name="Pokedex"
                 component={PokedexNavigation}
                 options={{
                     headerShown: false,
@@ -42,7 +42,7 @@ export default function Navigation() {
                 }}
             />
             <Tab.Screen 
-                name="AccountNavigation"
+                name="Account"
                 component={AccountNavigation}
                 options={{
                     headerShown: false,
