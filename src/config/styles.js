@@ -6,7 +6,7 @@ const AppStyles = {
         grey:"#C1C6CC",
         white:"#FFFFFF",
         lightGrey:"#EAEEF9",
-        BackGroundPage:"#FFFFFF",
+        BackGroundPage:"#FAFAFA",
         red:"#E26980",
         yellow:"#D8985F",
         transparent: "transparent",

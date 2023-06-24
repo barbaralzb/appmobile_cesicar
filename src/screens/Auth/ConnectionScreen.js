@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Configstyle from "../../config/styles";
@@ -17,9 +17,7 @@ export default function ConnectionScreen(props) {
     const [hidePass, setHidePass] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signIn } = useAuth();
-
-
+    const { signIn, isConnected } = useAuth();
 
     const handleSignIn = () => {
         signIn( email, password);

@@ -12,7 +12,7 @@ export default function NoLogged() {
         </Text>
         <Button
             title="Ir al login"
-            onPress={() => navigation.navigate("Account")}
+            onPress={() => navigation.navigate("Profile")}
         />
         </View>
     );

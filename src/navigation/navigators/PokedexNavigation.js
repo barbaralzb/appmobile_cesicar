@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PokedexScreen from '../screens/Pokedex';
-import PokemonScreen from '../screens/Pokemon';
+import PokedexScreen from '../../screens/Pokedex';
+import PokemonScreen from '../../screens/Pokemon';
 
 const Stack = createNativeStackNavigator()
 
