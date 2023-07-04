@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import Configstyle from "../../config/styles";
 const colors = Configstyle.PaletteColors;
 import PropTypes from "prop-types"
+import TextComponent from '../TextComponent';
 
 
 const ChoosingList = (props) => {
@@ -39,7 +40,7 @@ const ChoosingList = (props) => {
                 onPress={() => handleOptionSelect(option)}
               >
                 <RadioButtonHandler choix={option}/>
-                <Text style={styles.optionText}>{option}</Text>
+                <TextComponent text={option} size={16} />
               </TouchableOpacity>
             ))}
           </View>
@@ -77,9 +78,9 @@ const styles = StyleSheet.create({
   },
   optionButton: {
     paddingVertical: 8,
-  },
-  optionText: {
-    fontSize: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20
   },
   radioContainer: {
     height: 24,

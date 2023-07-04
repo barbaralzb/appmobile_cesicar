@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import Icon from '@expo/vector-icons/Feather'
 import { useTranslation } from 'react-i18next';
-import FavoriteNavigation from "./FavoriteNavigation";
+import SearchNavigation from "./SearchNavigation";
 import UnderConstructionScreen from "../../screens/UnderConstruction";
 import ProfileNavigation from "./ProfileNavigation";
 import PokedexNavigation from "./PokedexNavigation";
@@ -17,7 +17,7 @@ export default function Tabs(){
     
     return (
         <Tab.Navigator
-            initialRouteName="PokedexNavigation"
+            initialRouteName="SearchNavigation"
             screenOptions={{
                 tabBarHideOnKeyboard: true,
                 tabBarLabelStyle:{
@@ -45,8 +45,8 @@ export default function Tabs(){
 
         >
             <Tab.Screen 
-                name="FavoriteNavigation"
-                component={FavoriteNavigation}
+                name="SearchNavigation"
+                component={SearchNavigation}
                 options={{
                     headerShown: false,
                     tabBarLabel: t('RECHERCHER'),
