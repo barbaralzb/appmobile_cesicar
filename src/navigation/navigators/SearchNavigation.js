@@ -7,7 +7,9 @@ import PokemonScreen from '../../screens/Pokemon';
 import HomeScreen from '../../screens/Home/HomeScreen';
 import MapDepartScreen from '../../screens/Publier/MapDepartScreen';
 import TrajetsRecherchesScreen from '../../screens/Home/TrajetsRecherchesScreen';
- 
+import MapScreen from '../../screens/MapsScreen';
+import SearchPlaceScreen from '../../screens/SearchPlaceScreen';
+
 const Stack = createNativeStackNavigator()
 
 export default function SearchNavigation() {
@@ -19,6 +21,8 @@ export default function SearchNavigation() {
             <Stack.Screen name="MapDepartScreen" component={MapDepartScreen} options={{ title: `${t("VOUS_ALLEZ_OU")}`, headerTransparent: true }} />
             <Stack.Screen name="Favorite" component={FavoriteScreen} options={{ title: "Favoritos" }}/>
             <Stack.Screen name="Pokemon" component={PokemonScreen} options={{ title: "", headerTransparent: true }}/>
+            <Stack.Screen name="MapsScreen" component={MapScreen} options={{ title: "", headerTransparent: true }} />
+            <Stack.Screen name="SearchPlaceScreen" component={SearchPlaceScreen} options={{ title: "", headerTransparent: true }} />
         </Stack.Navigator>
     );
 };

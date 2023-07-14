@@ -7,20 +7,26 @@ import Icon from 'react-native-vector-icons/Feather';
 import Configstyle from "../../config/styles";
 const colors = Configstyle.PaletteColors;
 import DateTimePicker from '@react-native-community/datetimepicker'
-import ChoosingList from '../Onpress/ChoosingList';
-import TextComponent from '../TextComponent';
 
 
 
 //Components
+import ChoosingList from '../Onpress/ChoosingList';
+import TextComponent from '../TextComponent';
+
+const OPTIONS = [
+    'Campus de Rouen'
+]
 
 
 const ChercherTrajet = (props) => {
     const { navigation } = props
     const { t } = useTranslation();
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [depart, setDepart] = useState("");
+    const [destination, setDestination] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
-    const [switchInputs, setSwitchInputs] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
+    const [ choosingListAsDestination, setChoosingListAsDestination] = useState(true);
 
     const [ selectedDate, setSelectedDate ] = useState(new Date())
     const [ showDatePicker, setShowDatePicker ] = useState(false)
@@ -28,6 +34,18 @@ const ChercherTrajet = (props) => {
     const handleShowDatePicker = () => {
         setShowDatePicker(!showDatePicker)
     };
+
+    const switchPlaces = () => {
+        setChoosingListAsDestination(!choosingListAsDestination )
+    };
+
+    useEffect(()=> {
+        setDestination(selectedOption)
+    })
+
+    const handlerPlace = () => {
+        navigation.navigate('SearchPlaceScreen')
+    }
 
 
     return (
@@ -51,36 +69,26 @@ const ChercherTrajet = (props) => {
                 </View>
             </TouchableOpacity>
         </Modal>
+        <ChoosingList options={OPTIONS} selectedOption={selectedOption} setSelectedOption={setSelectedOption} modalVisible={modalVisible} setModalVisible={setModalVisible} />
         <View style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.wrapperInputs}>
-                    <View style={{ paddingVertical: 30, flexDirection: 'row', alignItems: 'center'  }}>
+                    <TouchableOpacity onPress={handlerPlace} style={{ paddingVertical: 30, flexDirection: 'row', alignItems: 'center'  }}>
                         <Icon name='map-pin' size={24} style={{marginRight: 20}} />
                         <TextComponent text={`${t('DEPART')} :`} color={"gray"} size={12} />
-                        {!switchInputs ?
-                        <TextInput />
-                        :
-                        <TouchableOpacity onPress={() => setModalVisible(true)} style={{flexDirection: 'row', alignItems: 'center' }}>
-                            <TextComponent text={selectedOption ? selectedOption : 'Select an option'} size={18} />
-                            <ChoosingList options={['Campus de Rouen']}  selectedOption={selectedOption} setSelectedOption={setSelectedOption} modalVisible={modalVisible} setModalVisible={setModalVisible} />
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' }}>
+                            <TextComponent text={depart} size={18} />
                         </TouchableOpacity>
-                        }
-                    </View>
-                    <View style={{ borderTopColor: colors.grey, borderTopWidth: 1 , paddingVertical: 30, flexDirection: 'row',  alignItems: 'center' }}>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={handlerPlace} style={{ borderTopColor: colors.grey, borderTopWidth: 1 , paddingVertical: 30, flexDirection: 'row',  alignItems: 'center' }}>
                         <Icon name='flag' size={24} style={{marginRight: 20}} />
                         <TextComponent text={`${t('ARRIVEE')} :`} color={"gray"} size={12} />
-                        {switchInputs ?
-                        <TextInput  />
-                        :
-                        <TouchableOpacity onPress={() => setModalVisible(true)} style={{flexDirection: 'row', alignItems: 'center' }}>
-                            <TextComponent text={selectedOption ? selectedOption : 'Select an option'} size={18} />
-                            <ChoosingList options={['Campus de Rouen']}  selectedOption={selectedOption} setSelectedOption={setSelectedOption} modalVisible={modalVisible} setModalVisible={setModalVisible} />
-                        </TouchableOpacity>
-                        }
-                    </View>
+                        <TextComponent text={destination} size={18} />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.wrapperSwitch}>
-                    <TouchableOpacity style={styles.iconBox} onPress={()=> setSwitchInputs(!switchInputs)} >
+                    <TouchableOpacity style={styles.iconBox} onPress={switchPlaces} >
                         <AntDesign name='swap' style={styles.icon} size={20} />
                     </TouchableOpacity>
                 </View>
@@ -115,7 +123,8 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         shadowOpacity: 0.26,
         padding: 30,
-        borderRadius: 10
+        borderRadius: 10,
+        margin: 30
     },
     iconBox:{
         borderRadius: 10,

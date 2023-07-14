@@ -6,6 +6,10 @@ const PhysicalDeviceAndroid = true;
 const MyIPV4 = "192.168.43.167";
 export const PRODUCTION = false
 
+export const coordenatesCesi = { latitude : 49.3823994, longitude: 1.0725815 }
+
+
+
 const HostIOS = PhysicalDeviceIOS ? MyIPV4 : "localhost"
 const HostAndroid = PhysicalDeviceAndroid ? MyIPV4 : "127.0.0.1"
 

@@ -33,7 +33,6 @@ const ChoosingList = (props) => {
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
           <View style={styles.modalContent}>
             {options.map((option, index) => (
-              console.log(option),
               <TouchableOpacity
                 key={index}
                 style={styles.optionButton}

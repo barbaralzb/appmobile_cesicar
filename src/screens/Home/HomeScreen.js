@@ -13,7 +13,7 @@ const HomeScreen = (props) => {
     const { t } = useTranslation()
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.container}>
+            {/* <ScrollView style={styles.container}> */}
                     <View style={styles.hero}>
                         <TextComponent text={t('CHOISISSEZ_LE_TRAJET')} size={30} weight={700} />
                         <TextComponent text={t('CHOISISSEZ_LE_TRAJET')} size={20} weight={500} />
@@ -22,7 +22,7 @@ const HomeScreen = (props) => {
                     <View style={styles.footer}>
                         <TextComponent text={''} size={20} weight={500} />
                     </View>
-            </ScrollView>
+            {/* </ScrollView> */}
         </SafeAreaView>
     );
 };
@@ -30,7 +30,7 @@ const HomeScreen = (props) => {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: colors.lightGrey,
+        backgroundColor: colors.BackGroundPage,
         padding: 20
     }, 
     hero : {

@@ -17,7 +17,7 @@ const UserData = () => {
     const { user, signOut } = useAuth();
     const [ total, setTotal ] = useState(0);
 
-    console.log('user', user.data)
+    // console.log('user', user.data)
 
     const DATA = [
         {
