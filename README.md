@@ -49,3 +49,6 @@ The CESICAR app uses an API for ride sharing and booking. To test the API, you c
 
 - [BlaBlaCar](https://www.blablacar.fr/)
 - [CESI Rouen](https://www.cesi.fr/ecole-ingenieurs-rouen/) 
+
+# Project Management
+- [Github KanBan](https://github.com/users/florentgallou-dev/projects/1)
