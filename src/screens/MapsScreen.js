@@ -1,38 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as Location from 'expo-location';
-import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import Icon from 'react-native-vector-icons/Feather'
-import { AntDesign } from '@expo/vector-icons';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_KEY } from '@env';
 
 import Configstyle from "../config/styles";
 const colors = Configstyle.PaletteColors;
 import { useTranslation } from 'react-i18next';
-import { getPlaceCoordinateApi } from '../api/fetchApi/Google';
-import TextComponent from '../componets/TextComponent';
+import { getAddressFromCoordinates, getPlaceCoordinateApi } from '../api/fetchApi/Google';
+import ButtonComponent from '../componets/Onpress/ButtonComponent';
+import { coordenatesCesi } from '../api/utils';
 
-const coordenatesCesi = { latitude : 49.3823994, longitude: 1.0725815 }
 
 const MapScreen = (props) => {
   const {
-    toCesi = true,
     navigation,
-    params
+    route : { params }
   } = props
-  const [origin, setOrigin] = useState(null);
-  const [destination, setDestination] = useState({});
+  const [place, setPlace] = useState(null);
   const mapViewRef = useRef(null)
   const { t } = useTranslation()
-
+  const [ nameInput, setNameInput ] = useState(null)
+  const [loader, setLoader] = useState(true);
+  const [loadingPosition, setLoadingPosition] = useState(false);
 
   useEffect(()=> {
-    if (toCesi) {
-      setDestination(coordenatesCesi)
+    if (params?.positionData) {
+      setPlace(params.positionData.coordenates)
+      setNameInput(params.positionData.name)
     }
-  }, [toCesi])
+    setLoader(false)
+  }, [params])
+
 
   const handlePlaceSelected = (place) => {
       getPlaceCoordinateApi(place)
@@ -46,69 +45,49 @@ const MapScreen = (props) => {
         };
         mapViewRef.current.animateToRegion(region, 1000);
 
-        setOrigin(markerCoordinate)
+        setPlace(markerCoordinate)
       })
       .catch((error) => {
           console.error('Error fetching travels:', error);
       });
   };
 
-  useEffect(() => {
-    getLocationPermission();
-  }, [])
-
-  async function getLocationPermission() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if(status !== 'granted') {
-      alert('Permission denied');
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    const current = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    }
-    setOrigin(current);
-  }
-
-    useEffect(() => {
-        navigation.setOptions({
-        headerLeft: () => (
-          <Icon
-            name="arrow-left"
-            color={colors.primary}
-            size={20}
-            style={{ marginLeft: 20 }}
-            onPress={navigation.goBack}
-          />
-        ),
-        headerTitle: () => (
-            <TextComponent text={t('VOUS_PARTEZ_D_OU')} weight="700" size={16} />
-        )
-        });
-    }, [navigation, params]);
-
+  const handleMarkerDragEnd = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setPlace({ latitude, longitude });
+    getAddressFromCoordinates(event.nativeEvent.coordinate)
+      .then((placeData) => {
+        setLoadingPosition(false)
+        setNameInput(placeData)
+      })
+      .catch((error) => {
+          console.error('Error fetching travels:', error);
+      });
+  };
+  const handleMarkerDragStart = () => setLoadingPosition(true)
+  const handlerValidateButton = () => navigation.navigate('HomeScreen')
   return (
-      <SafeAreaView style={styles.container}>
-      { !origin ?
+      <View style={styles.container}>
+      { loader ?
           <ActivityIndicator
             size={"large"}
             color={'#aeaeae'}
             style={styles.spinner}
           />
       :
+      <>
         <MapView 
           ref={mapViewRef}
           style={styles.map} 
           initialRegion={{
-            latitude: origin.latitude,
-            longitude: origin.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01
+            latitude: place?.latitude || coordenatesCesi.latitude,
+            longitude: place?.longitude || coordenatesCesi.longitude,
+            latitudeDelta: place ? 0.01 : 0.1 ,
+            longitudeDelta: place ?0.01 : 0.1
           }}
         >
         <GooglePlacesAutocomplete
-          placeholder="Buscar dirección"
+          placeholder={ !nameInput || loadingPosition ? '...' : nameInput}
           onPress={handlePlaceSelected}
           fetchDetails={true}
           query={{
@@ -122,14 +101,26 @@ const MapScreen = (props) => {
               listView: styles.listView,
           }}
         />
+        {place && place.latitude && place.longitude && (
           <Marker
             draggable
-            coordinate={origin}
-            pinColor={colors.indigo}
-          />
+            coordinate={place}
+            onDragStart={handleMarkerDragStart}
+            onDragEnd={handleMarkerDragEnd}
+          >
+            <View style={{height: 30, width: 30, backgroundColor: `${colors.alert}`, borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{fontSize: 20}}>😀</Text>
+            </View>
+          </Marker>
+        )
+        }
         </MapView>
+        <View style={styles.footerMap}>
+          <ButtonComponent title={t('VALIDER_DEPART')} onPress={handlerValidateButton} />
+        </View>
+      </>
       }
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -165,34 +156,37 @@ const styles = StyleSheet.create({
     borderRadius: 50
   },
   textInputContainer: {
-      backgroundColor: 'rgba(0,0,0,0)',
-      borderTopWidth: 0,
-      borderBottomWidth: 0,
-      paddingHorizontal: 0,
-      color: 'black',
-      paddingTop: 30
+    backgroundColor: 'rgba(0,0,0,0)',
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    paddingHorizontal: 0,
+    color: 'black',
   },
   textInput: {
-      marginLeft: 0,
-      marginRight: 0,
-      height: 40,
-      paddingVertical: 5,
-      paddingHorizontal: 10,
-      fontSize: 16,
-      color: 'black',
-        elevation: 10,
-        shadowColor: '#15173650',
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 6,
-        shadowOpacity: 0.26,
-        borderRadius: 10,
+    margin: 20,
+    height: 40,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: 'black',
+    elevation: 10,
+    shadowColor: '#15173650',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.26,
+    borderRadius: 10,
   },
   listView: {
-      borderWidth: 1,
-      borderColor: '#DDD',
-      backgroundColor: '#FFF',
-      marginHorizontal: 10,
-      elevation: 1,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    backgroundColor: '#FFF',
+    marginHorizontal: 10,
+    elevation: 1,
+    maxHeight: 250
+  },
+  footerMap: {
+    alignSelf: 'center',
+    bottom: 100
   }
 });
 

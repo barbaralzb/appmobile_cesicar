@@ -13,20 +13,30 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 //Components
 import ChoosingList from '../Onpress/ChoosingList';
 import TextComponent from '../TextComponent';
+import { coordenatesCesi } from '../../api/utils';
 
 const OPTIONS = [
     'Campus de Rouen'
 ]
 
+const positionCESIData = {
+    id: "CESI",
+    name: "CESI Rouen",
+    coordenates : coordenatesCesi
+}
+
 
 const ChercherTrajet = (props) => {
-    const { navigation } = props
+    const {
+        placeDataChosen,
+        navigation
+    } = props
     const { t } = useTranslation();
-    const [depart, setDepart] = useState("");
+    const [origin, setOrigin] = useState("");
     const [destination, setDestination] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
-    const [ choosingListAsDestination, setChoosingListAsDestination] = useState(true);
+    const [selectedOption, setSelectedOption] = useState("");
+    const [ cesiIsDestination, setCesiIsDestination] = useState(true);
 
     const [ selectedDate, setSelectedDate ] = useState(new Date())
     const [ showDatePicker, setShowDatePicker ] = useState(false)
@@ -35,19 +45,35 @@ const ChercherTrajet = (props) => {
         setShowDatePicker(!showDatePicker)
     };
 
-    const switchPlaces = () => {
-        setChoosingListAsDestination(!choosingListAsDestination )
-    };
-
     useEffect(()=> {
-        setDestination(selectedOption)
-    })
+        setDestination(positionCESIData)
+        if (placeDataChosen) setOrigin(placeDataChosen)
+    },[])
 
-    const handlerPlace = () => {
-        navigation.navigate('SearchPlaceScreen')
+    const switchPlaces = () => setCesiIsDestination(!cesiIsDestination)
+    
+
+    const handlerPlace = ({type}) => {
+        const ModalListIsDestination = (type == "DESTINATION" && cesiIsDestination)
+        const ModalListIsOrigin = (type == "ORIGIN" && !cesiIsDestination)
+        if ( ModalListIsDestination || ModalListIsOrigin) {
+            setModalVisible(true)
+        } else {
+            navigation.navigate('SearchPlaceScreen')
+        }
     }
 
+    useEffect(()=>{
+        if(cesiIsDestination){
+            setDestination(positionCESIData)
+            setOrigin(placeDataChosen)
+        } else {
+            setDestination(placeDataChosen)
+            setOrigin(positionCESIData)
+        }
+    },[cesiIsDestination])
 
+    
     return (
         <>
         <Modal visible={showDatePicker} transparent>
@@ -73,18 +99,14 @@ const ChercherTrajet = (props) => {
         <View style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.wrapperInputs}>
-                    <TouchableOpacity onPress={handlerPlace} style={{ paddingVertical: 30, flexDirection: 'row', alignItems: 'center'  }}>
+                    <TouchableOpacity onPress={()=>handlerPlace({type: "ORIGIN"})} style={{ paddingVertical: 30, flexDirection: 'row', alignItems: 'center'  }}>
                         <Icon name='map-pin' size={24} style={{marginRight: 20}} />
-                        <TextComponent text={`${t('DEPART')} :`} color={"gray"} size={12} />
-                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' }}>
-                            <TextComponent text={depart} size={18} />
-                        </TouchableOpacity>
+                        <TextComponent text={origin ? origin.name :t('DEPART')} size={18} color={origin ? colors.primary : colors.grey} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handlerPlace} style={{ borderTopColor: colors.grey, borderTopWidth: 1 , paddingVertical: 30, flexDirection: 'row',  alignItems: 'center' }}>
+                    <TouchableOpacity onPress={()=>handlerPlace({type: "DESTINATION"})} style={{ borderTopColor: colors.grey, borderTopWidth: 1 , paddingVertical: 30, flexDirection: 'row',  alignItems: 'center' }}>
                         <Icon name='flag' size={24} style={{marginRight: 20}} />
-                        <TextComponent text={`${t('ARRIVEE')} :`} color={"gray"} size={12} />
-                        <TextComponent text={destination} size={18} />
+                        <TextComponent text={destination ? destination.name : t('ARRIVEE')} size={18} color={destination ? colors.primary : colors.grey} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.wrapperSwitch}>

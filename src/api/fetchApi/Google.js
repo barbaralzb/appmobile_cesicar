@@ -1,5 +1,6 @@
 import axios from "axios";
 import { GOOGLE_MAPS_KEY } from '@env';
+import * as Location from 'expo-location'
 
 export const getPlaceCoordinateApi = async (place) => {
     const { place_id } = place
@@ -24,6 +25,26 @@ export const getPlaceCoordinateApi = async (place) => {
         return markerCoordinate; // Reemplaza esto con el resultado correcto que necesites retornar
     } catch (error) {
         console.error('Error fetching travels:', error);
+        throw error;
+    }
+};
+
+
+export const getAddressFromCoordinates = async (coordenates) => {
+    const { latitude, longitude } = coordenates
+    try {
+        const location = await Location.reverseGeocodeAsync({
+            latitude,
+            longitude,
+        });
+
+        if (location.length > 0) {
+            const {name, street, city, region, country } = location[0];
+            const formattedAddress = `${name}, ${city}`;
+            return formattedAddress
+        }
+    } catch (error) {
+        console.log(error);
         throw error;
     }
 };

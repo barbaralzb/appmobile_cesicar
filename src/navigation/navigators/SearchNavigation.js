@@ -21,8 +21,8 @@ export default function SearchNavigation() {
             <Stack.Screen name="MapDepartScreen" component={MapDepartScreen} options={{ title: `${t("VOUS_ALLEZ_OU")}`, headerTransparent: true }} />
             <Stack.Screen name="Favorite" component={FavoriteScreen} options={{ title: "Favoritos" }}/>
             <Stack.Screen name="Pokemon" component={PokemonScreen} options={{ title: "", headerTransparent: true }}/>
-            <Stack.Screen name="MapsScreen" component={MapScreen} options={{ title: "", headerTransparent: true }} />
-            <Stack.Screen name="SearchPlaceScreen" component={SearchPlaceScreen} options={{ title: "", headerTransparent: true }} />
+            <Stack.Screen name="MapsScreen" component={MapScreen} options={{ headerShown: false,  presentation: 'formSheet' }} />
+            <Stack.Screen name="SearchPlaceScreen" component={SearchPlaceScreen} options={{ title: "", headerTransparent: true, gestureDirection: 'vertical', presentation: 'fullScreenModal' }} />
         </Stack.Navigator>
     );
 };

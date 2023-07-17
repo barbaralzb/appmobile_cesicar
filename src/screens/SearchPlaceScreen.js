@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
-import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Icon from 'react-native-vector-icons/Feather'
@@ -11,7 +11,7 @@ import { GOOGLE_MAPS_KEY } from '@env';
 import Configstyle from "../config/styles";
 const colors = Configstyle.PaletteColors;
 import { useTranslation } from 'react-i18next';
-import { getPlaceCoordinateApi } from '../api/fetchApi/Google';
+import { getAddressFromCoordinates, getPlaceCoordinateApi } from '../api/fetchApi/Google';
 import TextComponent from '../componets/TextComponent';
 import { FlatList } from 'react-native-gesture-handler';
 import { coordenatesCesi } from '../api/utils';
@@ -26,11 +26,10 @@ const SearchPlaceScreen = (props) => {
     navigation,
     params
   } = props
-  const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState({});
-  const mapViewRef = useRef(null)
   const { t } = useTranslation()
   const [selectedId, setSelectedId] = useState();
+  const [loadingPosition, setLoadingPosition] = useState(false);
 
 
 
@@ -40,59 +39,22 @@ const SearchPlaceScreen = (props) => {
     }
   }, [toCesi])
 
-  const handlePlaceSelected = (place) => {
-      getPlaceCoordinateApi(place)
-      .then((markerCoordinate) => {
-
-        const region = {
-          latitude: markerCoordinate.latitude,
-          longitude: markerCoordinate.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        };
-        mapViewRef.current.animateToRegion(region, 1000);
-
-        setOrigin(markerCoordinate)
-      })
-      .catch((error) => {
-          console.error('Error fetching travels:', error);
-      });
-  };
-
   useEffect(() => {
-    getLocationPermission();
-  }, [])
-
-  async function getLocationPermission() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if(status !== 'granted') {
-      alert('Permission denied');
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    const current = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    }
-    setOrigin(current);
-  }
-
-    useEffect(() => {
-        navigation.setOptions({
-        headerLeft: () => (
-          <TouchableOpacity style={styles.wrapperIconBack} onPress={navigation.goBack}>
-            <Icon
-              name="arrow-left"
-              color={colors.primary}
-              size={20}
-            />
-          </TouchableOpacity>
-        ),
-        headerTitle: () => (
-            <TextComponent text={t('VOUS_PARTEZ_D_OU')} weight="700" size={18} />
-        )
-        });
-    }, [navigation, params]);
+      navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity style={styles.wrapperIconBack} onPress={navigation.goBack}>
+          <Icon
+            name="arrow-left"
+            color={colors.primary}
+            size={20}
+          />
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+          <TextComponent text={t('VOUS_PARTEZ_D_OU')} weight="700" size={18} />
+      )
+      });
+  }, [navigation, params]);
 
 
   const renderItem = ({item}) => {
@@ -109,11 +71,42 @@ const SearchPlaceScreen = (props) => {
     );
   };
 
-  const handlerOrigin = () => navigation.navigate('HomeScreen', {  } )
+  const handlerOrigin = () => {
+    setLoadingPosition(true)
+    getLocationPermission()
+  }
+
+  const handlePlaceSelected = (coordenates) => {
+      getAddressFromCoordinates(coordenates)
+      .then((placeData) => {
+        setLoadingPosition(false)
+        const positionData ={
+          coordenates,
+          "name" :placeData
+        }
+        navigation.navigate("MapsScreen",  { positionData })
+      })
+      .catch((error) => {
+          console.error('Error fetching travels:', error);
+      });
+  };
+
+  async function getLocationPermission() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if(status !== 'granted') {
+      alert('Permission denied');
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    const actual_position = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    }
+    handlePlaceSelected(actual_position)
+  }
 
   const Item = ({item}) => {
       const { label, typePlace } = item;
-      
       let icon = {}
       if (typePlace === 'HOME' ) icon = { name: 'home', color: colors.yellow }
       if (typePlace === 'FAV' )  icon = { name: 'heart', color: colors.red }
@@ -146,48 +139,32 @@ const SearchPlaceScreen = (props) => {
         <View style={styles.textUserSection}>
             <TextComponent text={t('MA_POSITION')} weight={500} />
         </View>
+        { loadingPosition &&
+        <View style={styles.icon} >
+          <Icon name={"crosshair"} size={16} />
+        </View>
+        }
       </TouchableOpacity>
     )
   }
+  const goToMap = () => navigation.navigate('MapsScreen')
 
   return (
       <SafeAreaView style={styles.container}>
-      { !origin ?
-          <ActivityIndicator
-            size={"large"}
-            color={'#aeaeae'}
-            style={styles.spinner}
-          />
-      :
         <View style={styles.wrapper}>
-        <View style={{ position: "absolute", width: '100%', zIndex: 2, alignSelf: 'center', top: 30}}>
-          <GooglePlacesAutocomplete
-          currentLocationLabel="Posición actual"
-            placeholder="Buscar dirección"
-            onPress={handlePlaceSelected}
-            fetchDetails={true}
-            query={{
-                key: GOOGLE_MAPS_KEY,
-                language: 'fr',
-                components: 'country:fr',
-            }}
-            styles={{
-                textInputContainer: styles.textInputContainer,
-                textInput: styles.textInput,
-                listView: styles.listView,
-            }}
+          <TextInput
+            onPressIn={goToMap}
+            style={styles.textInput}
+            value={"text"}
           />
+          <FlatList
+              data={[ ...defPlaces, ...favPlaces]}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}
+              extraData={selectedId}
+              ListHeaderComponent={HeaderFlatlist}
+            />
         </View>
-        <FlatList
-            data={[ ...defPlaces, ...favPlaces]}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            extraData={selectedId}
-            contentContainerStyle={{marginTop: 60}}
-            ListHeaderComponent={HeaderFlatlist}
-          />
-        </View>
-      }
     </SafeAreaView>
   );
 }
@@ -244,7 +221,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   boxIcon:{
-    backgroundColor: `${colors.blue}20`,
+    backgroundColor: `${colors.blue}30`,
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
@@ -266,7 +243,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingRight: 20
   },
-  
+  googleAutoCompleteWrapper:{
+    position: "absolute",
+    width: '100%',
+    zIndex: 2,
+    alignSelf: 'center',
+    top: 30
+  }
 });
 
 export default SearchPlaceScreen
