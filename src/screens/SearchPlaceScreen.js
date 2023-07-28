@@ -16,17 +16,18 @@ import TextComponent from '../componets/TextComponent';
 import { FlatList } from 'react-native-gesture-handler';
 import { coordenatesCesi } from '../api/utils';
 import { defPlaces, favPlaces, homePlace, schoolPlace } from '../utils/favDB';
+import BackButton from '../componets/Onpress/BackButton';
 
 
 
 
 const SearchPlaceScreen = (props) => {
   const {
-    toCesi = true,
     navigation,
-    params
+    route : {params}
   } = props
-  const [destination, setDestination] = useState({});
+  const [origin, setOrigin] = useState("");
+  const [place, setPlace] = useState("");
   const { t } = useTranslation()
   const [selectedId, setSelectedId] = useState();
   const [loadingPosition, setLoadingPosition] = useState(false);
@@ -34,24 +35,14 @@ const SearchPlaceScreen = (props) => {
 
 
   useEffect(()=> {
-    if (toCesi) {
-      setDestination(coordenatesCesi)
-    }
-  }, [toCesi])
+    setPlace(params?.place)
+  }, [])
 
   useEffect(() => {
       navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity style={styles.wrapperIconBack} onPress={navigation.goBack}>
-          <Icon
-            name="arrow-left"
-            color={colors.primary}
-            size={20}
-          />
-        </TouchableOpacity>
-      ),
+      headerLeft: () => <BackButton navigation={navigation} />,
       headerTitle: () => (
-          <TextComponent text={t('VOUS_PARTEZ_D_OU')} weight="700" size={18} />
+          <TextComponent text={params.cesiIsDestination ? t('VOUS_PARTEZ_D_OU') : t('VOUS_ALLEZ_OU')  } weight="700" size={18} />
       )
       });
   }, [navigation, params]);
@@ -80,11 +71,11 @@ const SearchPlaceScreen = (props) => {
       getAddressFromCoordinates(coordenates)
       .then((placeData) => {
         setLoadingPosition(false)
-        const positionData ={
+        const actualPositionGPSData ={
           coordenates,
-          "name" :placeData
+          "name" : placeData
         }
-        navigation.navigate("MapsScreen",  { positionData })
+        navigation.navigate("MapsScreen",  { actualPositionGPSData })
       })
       .catch((error) => {
           console.error('Error fetching travels:', error);
@@ -147,7 +138,7 @@ const SearchPlaceScreen = (props) => {
       </TouchableOpacity>
     )
   }
-  const goToMap = () => navigation.navigate('MapsScreen')
+  const goToMap = () => navigation.navigate('MapsScreen', {place : place} )
 
   return (
       <SafeAreaView style={styles.container}>
@@ -155,7 +146,7 @@ const SearchPlaceScreen = (props) => {
           <TextInput
             onPressIn={goToMap}
             style={styles.textInput}
-            value={"text"}
+            value={place?.name}
           />
           <FlatList
               data={[ ...defPlaces, ...favPlaces]}
@@ -202,14 +193,6 @@ const styles = StyleSheet.create({
   },
   listView: {
     elevation: 1,
-  },
-  wrapperIconBack:{
-    height: 40,
-    width: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10
   },
   userSection: {
     height: 100,

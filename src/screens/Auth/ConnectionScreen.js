@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
 
 
 // Valiar las props es util para cuando llame a <ConnectionScreen /> en ese momento tengo que enviar las props
-ConnectionScreen.propTypes = {
-    email : PropTypes.string.isRequired,
-    password : PropTypes.string.isRequired,
-}
+// ConnectionScreen.propTypes = {
+//     email : PropTypes.string.isRequired,
+//     password : PropTypes.string.isRequired,
+// }

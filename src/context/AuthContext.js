@@ -1,6 +1,6 @@
 import React, { useState, createContext, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { login } from '../api/fetchApi/Authentification';
+import { authApi, login } from '../api/fetchApi/Authentification';
 
 export const AuthContext = createContext({
     user: undefined,
@@ -47,8 +47,11 @@ export function AuthProvider(props) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 if (token) {
-                // Realizar aquí cualquier validación adicional del token si es necesario
-                    setIsConnected(true);
+                    console.log('token', token)
+                    const response = await authApi(token);
+                    console.log('response', response)
+                    // setUser(response)
+                    setIsConnected(true)
                 }
                 setIsLoading(false);
             } catch (error) {

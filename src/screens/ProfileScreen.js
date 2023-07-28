@@ -6,14 +6,16 @@ import ButtonComponent from '../componets/Onpress/ButtonComponent';
 import { useTranslation } from 'react-i18next';
 
 export default function ProfileScreen(props) {
-    const { navigation } = props
+    const {
+        navigation
+    } = props
     const { t } = useTranslation();
     const { isConnected } = useAuth()
 
     return (
         <SafeAreaView style={styles.container}>
             {isConnected ?
-                <UserData /> 
+                <UserData navigation ={navigation} /> 
                 :
                 <View  style={styles.buttons}>
                     <ButtonComponent title={t('CONNECTEZ_VOUS')} mb={30} onPress={()=> navigation.navigate("Auth", { screen: 'Connection' }) }  />

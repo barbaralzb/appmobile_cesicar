@@ -3,22 +3,26 @@ import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import TextComponent from "../../componets/TextComponent";
 import { useTranslation } from 'react-i18next';
 import AppStyles from "../../config/styles"
-import ChercherTrajet from '../../componets/Cards/ChercherTrajet';
+import CardChercherTrajet from '../../componets/Cards/CardChercherTrajet';
 const colors = AppStyles.PaletteColors;
 
 
 
 const HomeScreen = (props) => {
-    const { navigation } = props
+    const { 
+        navigation,
+        route : { params }
+    } = props
     const { t } = useTranslation()
+
+
     return (
         <SafeAreaView style={styles.container}>
             {/* <ScrollView style={styles.container}> */}
                     <View style={styles.hero}>
                         <TextComponent text={t('CHOISISSEZ_LE_TRAJET')} size={30} weight={700} />
-                        <TextComponent text={t('CHOISISSEZ_LE_TRAJET')} size={20} weight={500} />
                     </View>
-                    <ChercherTrajet navigation={navigation} />
+                    <CardChercherTrajet navigation={navigation} placeDataChosen={params?.place} />
                     <View style={styles.footer}>
                         <TextComponent text={''} size={20} weight={500} />
                     </View>

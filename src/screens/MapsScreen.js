@@ -25,15 +25,20 @@ const MapScreen = (props) => {
   const [loadingPosition, setLoadingPosition] = useState(false);
 
   useEffect(()=> {
-    if (params?.positionData) {
-      setPlace(params.positionData.coordenates)
-      setNameInput(params.positionData.name)
+    if (params?.actualPositionGPSData) {
+      setPlace(params.actualPositionGPSData.coordenates)
+      setNameInput(params.actualPositionGPSData.name)
+    }
+    if (params?.place) {
+      setPlace(params.place.coordenates)
+      setNameInput(params.place.name)
     }
     setLoader(false)
   }, [params])
 
 
   const handlePlaceSelected = (place) => {
+      setNameInput(place.description),
       getPlaceCoordinateApi(place)
       .then((markerCoordinate) => {
 
@@ -65,7 +70,10 @@ const MapScreen = (props) => {
       });
   };
   const handleMarkerDragStart = () => setLoadingPosition(true)
-  const handlerValidateButton = () => navigation.navigate('HomeScreen')
+
+
+  const handlerValidateButton = () => navigation.navigate('HomeScreen', { place : { coordenates : place, name: nameInput} })
+
   return (
       <View style={styles.container}>
       { loader ?
@@ -83,7 +91,7 @@ const MapScreen = (props) => {
             latitude: place?.latitude || coordenatesCesi.latitude,
             longitude: place?.longitude || coordenatesCesi.longitude,
             latitudeDelta: place ? 0.01 : 0.1 ,
-            longitudeDelta: place ?0.01 : 0.1
+            longitudeDelta: place ? 0.01 : 0.1
           }}
         >
         <GooglePlacesAutocomplete

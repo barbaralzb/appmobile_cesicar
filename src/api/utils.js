@@ -20,3 +20,4 @@ export const ServerUrl = PlatformServer;
 
 export const AuthApi = "/api/login"
 export const TravelsApi = "/api/travels"
+export const MeApi = "/api/me"

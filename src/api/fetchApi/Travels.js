@@ -12,3 +12,21 @@ export const getTravelsApi = async () => {
         config
     );
 }
+
+export const getTravelsByDestinationApi = async (toCesi) => {
+    const config = {
+        headers: {
+            Accept: 'application/ld+json'
+        },
+    }
+
+    const params = {
+        toCesi: toCesi
+    }
+
+    return await axios.get(
+        ServerUrl + TravelsApi,
+        params,
+        config
+    );
+}

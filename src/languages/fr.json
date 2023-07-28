@@ -43,5 +43,12 @@
     "ARRIVEE": "Arrivée",
     "VOUS_PARTEZ_D_OU": "Vous partez d'où ?",
     "MA_POSITION": "Ma position",
-    "VALIDER_DEPART": "Valider départ"
+    "VALIDER_DEPART": "Valider départ",
+    "FRANCAIS": "Français",
+    "ENGLISH": "Anglais",
+    "ESPAGNOL": "Espagnol",
+    "ARABE": "Arabe",
+    "DEUTSH": "Deutsch",
+    "GERER_VOTRE_LANGUE": "Gérer votre langue"
+
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import Icon from "react-native-vector-icons/Feather";
 import Configstyle from "../../config/styles";
@@ -6,6 +6,7 @@ const colors = Configstyle.PaletteColors;
 import TextComponent from '../../componets/TextComponent'
 import { useTranslation } from 'react-i18next';
 import Trajet from '../../componet/Trajets/Trajet';
+import { getTravelsByDestinationApi } from '../../api/fetchApi/Travels';
 
 
 const DATA = [
@@ -21,8 +22,34 @@ const DATA = [
 ]
 
 const TrajetsRecherchesScreen = (props) => {
-    const { params, navigation } = props
+    const {
+        navigation,
+        route : { params }
+    } = props
     const { t } = useTranslation()
+
+    const [loader, setLoader] = useState(true);
+
+    useEffect(() => {
+        getTravelsByDestination();
+    }, [params]);
+
+    const getTravelsByDestination = async () => {
+        const toCesi = params?.cesiIsDestination
+        console.log(toCesi)
+        try {
+            const response = await getTravelsByDestinationApi( toCesi );
+            const data = response.data;
+            // Procesar los datos obtenidos de la API.
+            console.log(data);
+            setLoader(false)
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+            setLoader(false)
+        }
+    };
+
+
 
     useEffect(() => {
         navigation.setOptions({

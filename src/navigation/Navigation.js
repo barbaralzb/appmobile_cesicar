@@ -10,7 +10,7 @@ const MainStack = createNativeStackNavigator();
 export default function Navigation() {
     const { isConnected, user } = useAuth()
 
-    console.log('isConnected', isConnected)
+    // console.log('isConnected', isConnected)
     console.log('user', user)
 
     return (

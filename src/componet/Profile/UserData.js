@@ -11,7 +11,11 @@ import Icon from 'react-native-vector-icons/Feather'
 import { useTranslation } from "react-i18next";
 
 
-const UserData = () => {
+const UserData = (props) => {
+    const {
+        navigation
+    } = props
+
     const { t } = useTranslation();
     
     const { user, signOut } = useAuth();
@@ -22,8 +26,9 @@ const UserData = () => {
     const DATA = [
         {
             id: 'SETTINGS',
-            title: t('PARAMETRES'),
-            icon: "settings"
+            title: t('GERER_VOTRE_LANGUE'),
+            icon: "globe",
+            action: () =>  navigation.navigate("LangueParametreScreen")
         },
         {
             id: 'FAQ',

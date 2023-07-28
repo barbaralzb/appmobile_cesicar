@@ -26,14 +26,14 @@ const positionCESIData = {
 }
 
 
-const ChercherTrajet = (props) => {
+const CardChercherTrajet = (props) => {
     const {
         placeDataChosen,
-        navigation
+        navigation,
     } = props
     const { t } = useTranslation();
-    const [origin, setOrigin] = useState("");
-    const [destination, setDestination] = useState("");
+    const [origin, setOrigin] = useState(null);
+    const [destination, setDestination] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState("");
     const [ cesiIsDestination, setCesiIsDestination] = useState(true);
@@ -48,7 +48,7 @@ const ChercherTrajet = (props) => {
     useEffect(()=> {
         setDestination(positionCESIData)
         if (placeDataChosen) setOrigin(placeDataChosen)
-    },[])
+    },[placeDataChosen])
 
     const switchPlaces = () => setCesiIsDestination(!cesiIsDestination)
     
@@ -59,7 +59,7 @@ const ChercherTrajet = (props) => {
         if ( ModalListIsDestination || ModalListIsOrigin) {
             setModalVisible(true)
         } else {
-            navigation.navigate('SearchPlaceScreen')
+            navigation.navigate('SearchPlaceScreen', { place : placeDataChosen, cesiIsDestination } )
         }
     }
 
@@ -72,6 +72,21 @@ const ChercherTrajet = (props) => {
             setOrigin(positionCESIData)
         }
     },[cesiIsDestination])
+
+
+    const handlerSearchTravel = () => {
+        if (!selectedDate) {
+            handleShowDatePicker();
+            return;
+        }
+
+        if (!origin || !destination) {
+            navigation.navigate('SearchPlaceScreen', { place: placeDataChosen, cesiIsDestination });
+        } else {
+            navigation.navigate('TrajetsRecherchesScreen', { place: placeDataChosen, cesiIsDestination, selectedDate });
+        }
+    };
+
 
     
     return (
@@ -115,7 +130,7 @@ const ChercherTrajet = (props) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <TouchableOpacity onPress={()=> handleShowDatePicker()}>
+            <TouchableOpacity onPress={handleShowDatePicker}>
                 <View style={{ borderTopColor: colors.grey, borderTopWidth: 1, paddingVertical: 30, flexDirection: 'row' }}>
                     <Icon name='calendar' size={24} style={{marginRight: 20}} />
                     <TextInput
@@ -130,7 +145,7 @@ const ChercherTrajet = (props) => {
 
 
             <View style={{ paddingVertical: 10 }}>
-                <ButtonComponent title={t('RECHERCHER')} onPress={ () => navigation.navigate("TrajetsRecherchesScreen")} />
+                <ButtonComponent title={t('RECHERCHER')} onPress={handlerSearchTravel} />
             </View>
         </View>
         </>
@@ -183,4 +198,4 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
 });
-export default ChercherTrajet
+export default CardChercherTrajet
